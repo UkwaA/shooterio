@@ -1,0 +1,15 @@
+.gamebox{
+    /* padding:20px; */
+    border: 5px grey solid;
+    height:100%;
+}
+
+.tile{
+    display:inline-block;
+    box-sizing: border-box;
+    border: 1px solid grey;
+    text-align: center;
+    width:20%;
+    height:50px;
+    /* margin:auto; */
+}
