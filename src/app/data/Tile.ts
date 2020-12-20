@@ -6,7 +6,7 @@ export class Tile{
     pickup:Item;
     itemType:string = '';
     color:string = 'black';
-    img:string = '.';
+    img:string = 'empty.png';
 
     constructor(){}
 
@@ -23,7 +23,7 @@ export class Tile{
         this.item = null;
         this.itemType = '';
         this.color = 'black';
-        this.img = '.';
+        this.img = 'empty.png';
     }
 
     hasPlayer():boolean{

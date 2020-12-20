@@ -24,7 +24,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit(){
     this.gamebox = document.getElementById('gamebox');
-    this.map = new Map(5,5);
+    this.map = new Map(10,10);
     this.map.addPlayer();
     this.map.addPlayer();
     this.players = this.map.players;
@@ -83,12 +83,17 @@ export class AppComponent implements OnInit {
               this.map.walk('down', player2);
               break;
           case " ":
-            // if (player2)
-            // // let check = this.checkDirection(player2.direction, player2.coords);
-            //   if (this.checkDirection(player2.direction, player2.coords)){
-            //     let bullet = player2.fireWeapon([player2.coords[0],player2.coords[1]]);
-            //     this.map.shoot(player2.direction, player2, player1, bullet, 0);
-            //   }
+            if (player2){
+              if (!player2.bullet_fired){
+                let bullet = player2.fireWeapon(player2.direction, [player2.coords[0],player2.coords[1]]);
+                console.log(bullet);
+                if (this.map.checkDirection(bullet.direction, bullet.coords) == 'player')
+                  player1.hit(25)
+                else
+                  this.map.shoot(bullet, player2, player1, 0);
+              }
+              // }
+            }
               break;
           default:
             console.log(e.key);

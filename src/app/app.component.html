@@ -4,7 +4,9 @@
 </div>
 <div class="gamebox" id="gamebox">
   <div *ngFor="let x of board; let row = index">
-    <div *ngFor="let y of x; let col = index" class="tile" id="{{row}}{{col}}" [style.color]="y.color">{{y.img}}</div>
+    <div *ngFor="let y of x; let col = index" id="{{row}}{{col}}" class="tile" [style.color]="y.color">
+      <img [src]="'assets/'+y.img" style="display:inline-block; height:100%; width:100%">
+    </div>
   </div>
 </div>
 <router-outlet></router-outlet>

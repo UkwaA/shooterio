@@ -48,6 +48,12 @@ export class Map{
       }
 
     shoot(bullet:Bullet, player:Player, player2:Player, round?:number){
+        if (bullet.active())
+            bullet.incrementRange();
+        else{ 
+            this.map[bullet.coords[0]][bullet.coords[1]].emptyTile();
+            return;
+        }
 
         switch (this.checkDirection(bullet.direction, bullet.coords)){
             case 'empty':
@@ -57,10 +63,13 @@ export class Map{
                 break;
             case 'player':
                 this.map[bullet.coords[0]][bullet.coords[1]].emptyTile(); 
-                if (player2.hit(25)){
+                if (player2.hit(bullet.damage)){
                     this.map[player2.coords[0]][player2.coords[1]].emptyTile();
                 this.players.splice(1,1);
                 }
+                break;
+            case 'bullet':
+                setTimeout(() => this.map[bullet.coords[0]][bullet.coords[1]].emptyTile(), 500);
                 break;
             case 'undefined':
                 this.map[bullet.coords[0]][bullet.coords[1]].emptyTile();
@@ -90,7 +99,7 @@ export class Map{
               item.coords[1] += 1;
               break;
         }
-      }
+    }
 
     checkDirection(direction:string, curr_coords:number[]){
         let new_coords;
@@ -112,7 +121,7 @@ export class Map{
           if (new_coords[1] >= 0 && new_coords[1] < this.num_cols)
             switch (this.map[new_coords[0]][new_coords[1]].itemType){
                 case '':
-                    console.log('.');
+                    // console.log('.');
                     return 'empty';
                 case 'player':
                     console.log('O');
