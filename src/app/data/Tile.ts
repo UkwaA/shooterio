@@ -5,25 +5,22 @@ export class Tile{
     item:Item;
     pickup:Item;
     itemType:string = '';
-    color:string = 'black';
-    img:string = 'empty.png';
+    emptyItem:Item = new Item();
 
-    constructor(){}
+    constructor(){
+        this.item = this.emptyItem;
+    }
 
     setTile(item:Item){
         this.empty = false;
         this.item = item;
         this.itemType = item.itemType;
-        this.color = item.color;
-        this.img = item.img;
     }
     
     emptyTile(){
         this.empty = true;
-        this.item = null;
+        this.item = this.emptyItem;
         this.itemType = '';
-        this.color = 'black';
-        this.img = 'empty.png';
     }
 
     hasPlayer():boolean{

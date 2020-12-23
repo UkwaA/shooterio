@@ -42,7 +42,8 @@ export class Map{
 
     walk(direction:string, player:Player){
         if (this.checkDirection(direction, player.coords) == 'empty'){
-            player.switchDirection(direction);
+            if (direction != player.direction)
+                player.switchDirection(direction);
             this.moveItem(direction, player);
         }
       }
@@ -77,26 +78,62 @@ export class Map{
           }   
         }
 
-    moveItem(direction:string, item:Item, type:string='player'){
-        if (type == 'player')
-          this.map[item.coords[0]][item.coords[1]].emptyTile();
+    moveItem(direction:string, item:Item){
+        if (item.itemType == 'player'){
+            (<Player>item).switchDirection(direction);
+            console.log('item switch');
+        }
+        //   this.map[item.coords[0]][item.coords[1]].emptyTile();
     
         switch (direction){
-          case 'up':
-              this.map[item.coords[0]-1][item.coords[1]].setTile(item);
-              item.coords[0] -= 1;
-              break;
+            case 'up':
+                item.y_coord -= 10;
+                console.log('+5: ' + item.y_coord);
+
+                if (item.y_coord < -25){
+                    console.log('next tile');
+                    this.map[item.coords[0]][item.coords[1]].emptyTile();
+                    this.map[item.coords[0]-1][item.coords[1]].setTile(item);
+                    item.coords[0] -= 1;
+                    item.y_coord = 16;
+                }
+                break;
           case 'down':
-              this.map[item.coords[0]+1][item.coords[1]].setTile(item);
-              item.coords[0] += 1;
+            item.y_coord += 10;
+            console.log('+5: ' + item.y_coord);
+
+            if (item.y_coord > 25){
+                console.log('next tile');
+                this.map[item.coords[0]][item.coords[1]].emptyTile();
+                this.map[item.coords[0]+1][item.coords[1]].setTile(item);
+                item.coords[0] += 1;
+                item.y_coord = -16;
+            }
               break;
           case 'left':
+            item.x_coord -= 10;
+            console.log('-5: ' + item.x_coord);
+
+            if (item.x_coord < -25){
+              console.log('next tile');
+              this.map[item.coords[0]][item.coords[1]].emptyTile();
               this.map[item.coords[0]][item.coords[1]-1].setTile(item);
               item.coords[1] -= 1;
+              item.x_coord = 16;
+            }
               break;
           case 'right':
-              this.map[item.coords[0]][item.coords[1]+1].setTile(item);
-              item.coords[1] += 1;
+              item.x_coord += 10;
+              console.log('+5: ' + item.x_coord);
+
+              if (item.x_coord > 25){
+                console.log('next tile');
+                this.map[item.coords[0]][item.coords[1]].emptyTile();
+                this.map[item.coords[0]][item.coords[1]+1].setTile(item);
+                item.coords[1] += 1;
+                item.x_coord = -16;
+              }
+
               break;
         }
     }

@@ -63,7 +63,6 @@ export class AppComponent implements OnInit {
                 else
                   this.map.shoot(bullet, player1, player2, 0);
               }
-              // }
             }
             break;
           case "ArrowUp":
@@ -75,8 +74,9 @@ export class AppComponent implements OnInit {
             this.map.walk('left', player2);
             break;
           case "ArrowRight":
-            if (player2)
-            this.map.walk('right', player2);
+            if (player2){
+                this.map.walk('right', player2);
+            }
             break;
           case "ArrowDown":
             if (player2)
@@ -92,7 +92,6 @@ export class AppComponent implements OnInit {
                 else
                   this.map.shoot(bullet, player2, player1, 0);
               }
-              // }
             }
               break;
           default:

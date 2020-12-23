@@ -1,3 +1,4 @@
+import { HostBinding } from '@angular/core';
 import { Item } from './Item';
 import { Weapon } from './Weapon';
 
@@ -11,14 +12,19 @@ export class Player extends Item{
     img:string;
 
     constructor(name:string, direction:string, color:string = 'black',
-        img:string='player_black_right.png', coords:number[] = [2,2],){
+        img:string='player/black_right.png', coords:number[] = [2,2],){
         super();
+        this.x_coord = 10;
         this.name = name;
         this.itemType = 'player';
         this.direction = direction;
         this.coords = coords;
-        this.img = 'player_black_right.png';
+        this.img = 'player/black_right.png';
         this.color = color;
+    }
+
+    get x_coords(){
+        return this.x_coord + 'px';
     }
 
     hit(amount:number){

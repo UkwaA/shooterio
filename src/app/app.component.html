@@ -4,8 +4,8 @@
 </div>
 <div class="gamebox" id="gamebox">
   <div *ngFor="let x of board; let row = index">
-    <div *ngFor="let y of x; let col = index" id="{{row}}{{col}}" class="tile" [style.color]="y.color">
-      <img [src]="'assets/'+y.img" style="display:inline-block; height:100%; width:100%">
+    <div *ngFor="let y of x; let col = index" class="tile">
+      <img [class]="y.itemType" id="{{row}}{{col}}" [src]="'assets/'+y.item.img" [style.left.px]="y.item.x_coord" [style.top.px]="y.item.y_coord">
     </div>
   </div>
 </div>
