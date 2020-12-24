@@ -14,7 +14,7 @@ export class Player extends Item{
     constructor(name:string, direction:string, color:string = 'black',
         img:string='player/black_right.png', coords:number[] = [2,2],){
         super();
-        this.x_coord = 10;
+        // this.x_coord = 0;
         this.name = name;
         this.itemType = 'player';
         this.direction = direction;

@@ -1,5 +1,5 @@
 .gamebox{
-    /* padding:20px; */
+    width: 613px;
     border: 5px grey solid;
     height:100%;
 }
@@ -14,7 +14,7 @@
     /* margin:auto; */
 }
 
-.player{
+.player, .bullet{
     position:relative;
 }
 
@@ -22,4 +22,6 @@ img{
     display:inline-block; 
     height:100%; 
     width:100%;
+    margin:0px;
+    padding:0px;
 }

@@ -32,6 +32,9 @@ export class AppComponent implements OnInit {
     this.players[1].setWeapon(new Weapon());
     this.board = this.map.map;
     console.log(this.board);
+    // setTimeout(() => console.log(document.getElementById('11').offsetWidth), 5);
+    // setTimeout(() => console.log(document.getElementById('11').offsetHeight), 5);
+    // console.log(document.getElementById('gamebox').offsetWidth);
 
     document.onkeydown = (e) => {
       let player1 = this.players[0];
@@ -58,7 +61,7 @@ export class AppComponent implements OnInit {
               if (!player1.bullet_fired){
                 let bullet = player1.fireWeapon(player1.direction, [player1.coords[0],player1.coords[1]]);
                 console.log(bullet);
-                if (this.map.checkDirection(bullet.direction, bullet.coords) == 'player')
+                if (this.map.checkDirection(bullet.direction, bullet) == 'player')
                   player2.hit(25)
                 else
                   this.map.shoot(bullet, player1, player2, 0);
@@ -87,7 +90,7 @@ export class AppComponent implements OnInit {
               if (!player2.bullet_fired){
                 let bullet = player2.fireWeapon(player2.direction, [player2.coords[0],player2.coords[1]]);
                 console.log(bullet);
-                if (this.map.checkDirection(bullet.direction, bullet.coords) == 'player')
+                if (this.map.checkDirection(bullet.direction, bullet) == 'player')
                   player1.hit(25)
                 else
                   this.map.shoot(bullet, player2, player1, 0);

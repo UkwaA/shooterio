@@ -41,7 +41,7 @@ export class Map{
     }
 
     walk(direction:string, player:Player){
-        if (this.checkDirection(direction, player.coords) == 'empty'){
+        if (this.checkDirection(direction, player) == 'empty'){
             if (direction != player.direction)
                 player.switchDirection(direction);
             this.moveItem(direction, player);
@@ -49,18 +49,16 @@ export class Map{
       }
 
     shoot(bullet:Bullet, player:Player, player2:Player, round?:number){
-        if (bullet.active())
-            bullet.incrementRange();
-        else{ 
+        if (!bullet.active()){
             this.map[bullet.coords[0]][bullet.coords[1]].emptyTile();
             return;
         }
 
-        switch (this.checkDirection(bullet.direction, bullet.coords)){
+        switch (this.checkDirection(bullet.direction, bullet)){
             case 'empty':
                 this.moveItem(bullet.direction, bullet);
                 this.map[player.coords[0]][player.coords[1]].setTile(player); 
-                setTimeout(() =>  this.shoot(bullet, player, player2), 300);
+                setTimeout(() =>  this.shoot(bullet, player, player2), 100);
                 break;
             case 'player':
                 this.map[bullet.coords[0]][bullet.coords[1]].emptyTile(); 
@@ -78,82 +76,90 @@ export class Map{
           }   
         }
 
-    moveItem(direction:string, item:Item){
-        if (item.itemType == 'player'){
-            (<Player>item).switchDirection(direction);
-            console.log('item switch');
-        }
-        //   this.map[item.coords[0]][item.coords[1]].emptyTile();
-    
+    moveItem(direction:string, item:Item){    
         switch (direction){
             case 'up':
                 item.y_coord -= 10;
-                console.log('+5: ' + item.y_coord);
+                // console.log('+5: ' + item.y_coord);
 
-                if (item.y_coord < -25){
+                if (item.y_coord < -20){
+                    if (item.itemType == 'bullet')
+                        (<Bullet>item).incrementRange();
                     console.log('next tile');
                     this.map[item.coords[0]][item.coords[1]].emptyTile();
                     this.map[item.coords[0]-1][item.coords[1]].setTile(item);
                     item.coords[0] -= 1;
-                    item.y_coord = 16;
+                    item.y_coord = 10;
                 }
                 break;
           case 'down':
             item.y_coord += 10;
-            console.log('+5: ' + item.y_coord);
+            // console.log('+5: ' + item.y_coord);
 
-            if (item.y_coord > 25){
+            if (item.y_coord > 20){
+                if (item.itemType == 'bullet')
+                    (<Bullet>item).incrementRange();
                 console.log('next tile');
                 this.map[item.coords[0]][item.coords[1]].emptyTile();
                 this.map[item.coords[0]+1][item.coords[1]].setTile(item);
                 item.coords[0] += 1;
-                item.y_coord = -16;
+                item.y_coord = -10;
             }
               break;
           case 'left':
-            item.x_coord -= 10;
-            console.log('-5: ' + item.x_coord);
+            item.x_coord -= 15;
+            // console.log('-5: ' + item.x_coord);
 
-            if (item.x_coord < -25){
+            if (item.x_coord < -30){
+                if (item.itemType == 'bullet')
+                    (<Bullet>item).incrementRange();
               console.log('next tile');
               this.map[item.coords[0]][item.coords[1]].emptyTile();
               this.map[item.coords[0]][item.coords[1]-1].setTile(item);
               item.coords[1] -= 1;
-              item.x_coord = 16;
+              item.x_coord = 15;
             }
               break;
           case 'right':
-              item.x_coord += 10;
-              console.log('+5: ' + item.x_coord);
+              item.x_coord += 15;
+            //   console.log('+5: ' + item.x_coord);
 
-              if (item.x_coord > 25){
-                console.log('next tile');
+              if (item.x_coord > 30){
+                if (item.itemType == 'bullet')
+                    (<Bullet>item).incrementRange();
+                // console.log('next tile');
                 this.map[item.coords[0]][item.coords[1]].emptyTile();
                 this.map[item.coords[0]][item.coords[1]+1].setTile(item);
                 item.coords[1] += 1;
-                item.x_coord = -16;
+                item.x_coord = -15;
               }
-
               break;
         }
     }
 
-    checkDirection(direction:string, curr_coords:number[]){
-        let new_coords;
+    checkDirection(direction:string, item:Item){
+        let new_coords = item.coords;
         switch (direction){
-          case 'up':
-              new_coords = [curr_coords[0]-1, curr_coords[1]];
-              break;
-          case 'down':
-              new_coords = [curr_coords[0]+1, curr_coords[1]];
-              break;
-          case 'left':
-              new_coords = [curr_coords[0], curr_coords[1]-1];
-              break;
-          case 'right':
-              new_coords = [curr_coords[0], curr_coords[1]+1];
-              break;
+            case 'up':
+                if (item.y_coord <= -20)
+                    new_coords = [item.coords[0]-1, item.coords[1]];
+                break;
+            case 'down':
+                if (item.y_coord >= 20)
+                    new_coords = [item.coords[0]+1, item.coords[1]];
+                break;
+            case 'left':
+                if (item.x_coord <= -30)
+                    new_coords = [item.coords[0], item.coords[1]-1];
+                break;
+            case 'right':
+                if (item.x_coord >= 30)
+                    new_coords = [item.coords[0], item.coords[1]+1];
+                break;
         }
+        if (new_coords == item.coords)
+            return 'empty';
+        console.log(new_coords);
         if (new_coords[0] >= 0 && new_coords[0] < this.num_rows)
           if (new_coords[1] >= 0 && new_coords[1] < this.num_cols)
             switch (this.map[new_coords[0]][new_coords[1]].itemType){
@@ -171,5 +177,5 @@ export class Map{
                     return 'unknown';
             }
         return 'undefined';
-      }
+    }
 }
