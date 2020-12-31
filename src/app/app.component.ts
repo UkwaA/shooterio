@@ -21,21 +21,27 @@ export class AppComponent implements OnInit {
   num_rows:number = 5;
   num_cols:number = 5;
 
+  mousePos:number = 0;
+  trackMouse:boolean = false;
+  player1:Player;
 
   ngOnInit(){
     this.gamebox = document.getElementById('gamebox');
-    this.map = new Map(10,10);
+    this.map = new Map();
     this.map.addPlayer();
-    this.map.addPlayer();
+    // this.map.addPlayer('zombie');
     this.players = this.map.players;
     this.players[0].setWeapon(new Weapon());
-    this.players[1].setWeapon(new Weapon());
+    this.player1 = this.players[0];
     this.board = this.map.map;
     console.log(this.board);
 
+    this.gamebox.onclick = (e) => {
+      this.map.shoot(this.player1.weapon.assault(this.player1.coords, 0));
+    }
+
     document.onkeydown = (e) => {
       let player1 = this.players[0];
-      let player2 = this.players[1];
       switch(e.key){
           case "w":
             if (player1)
@@ -53,51 +59,26 @@ export class AppComponent implements OnInit {
             if (player1)
               this.map.walk('down', player1);
               break;
-          case "x":
-            if (player1){
-              if (!player1.bullet_fired){
-                let bullet = player1.fireWeapon(player1.direction, [player1.coords[0],player1.coords[1]]);
-                console.log(bullet);
-                if (this.map.checkDirection(bullet.direction, bullet.coords) == 'player')
-                  player2.hit(25)
-                else
-                  this.map.shoot(bullet, player1, player2, 0);
-              }
-            }
-            break;
-          case "ArrowUp":
-            if (player2)
-              this.map.walk('up', player2);
-              break;
-          case "ArrowLeft":
-            if (player2)
-            this.map.walk('left', player2);
-            break;
-          case "ArrowRight":
-            if (player2){
-                this.map.walk('right', player2);
-            }
-            break;
-          case "ArrowDown":
-            if (player2)
-              this.map.walk('down', player2);
-              break;
-          case " ":
-            if (player2){
-              if (!player2.bullet_fired){
-                let bullet = player2.fireWeapon(player2.direction, [player2.coords[0],player2.coords[1]]);
-                console.log(bullet);
-                if (this.map.checkDirection(bullet.direction, bullet.coords) == 'player')
-                  player1.hit(25)
-                else
-                  this.map.shoot(bullet, player2, player1, 0);
-              }
-            }
-              break;
           default:
             console.log(e.key);
             break;
       }
     }
+  }
+
+  toggleMouseTracker(){
+    this.trackMouse = !this.trackMouse;
+    console.log(this.trackMouse);
+  }
+
+  changeAngle(e){
+    let box = e.target.getBoundingClientRect();
+    let mouseX = e.clientX - box.left;
+    let mouseY = e.clientY - box.top;
+    let yCoord = this.player1.coords[1] + 40;
+    let xCoord = this.player1.coords[0] + 40;
+    
+
+    this.mousePos = Math.atan2(mouseY-yCoord, mouseX-xCoord) * 180 / Math.PI;
   }
 }

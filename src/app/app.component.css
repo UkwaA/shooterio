@@ -1,7 +1,9 @@
 .gamebox{
     /* padding:20px; */
-    border: 5px grey solid;
-    height:100%;
+    /* width:600px; */
+    border: 1px grey solid;
+    height:600px;
+    position: relative;
 }
 
 .tile{
@@ -14,12 +16,14 @@
     /* margin:auto; */
 }
 
-.player{
-    position:relative;
+.item{
+    position:absolute;
 }
 
 img{
     display:inline-block; 
-    height:100%; 
-    width:100%;
+    /* height:100%;  */
+    width:10%;
+    transition:.1s;
+    /* transform-origin:top left; */
 }

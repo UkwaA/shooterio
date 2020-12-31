@@ -4,172 +4,129 @@ import { Player } from './Player';
 import { Tile } from './Tile';
 
 export class Map{
-    map:any[] = [];
+    map:Item[] = [];
     players:Player[] = [];
-    player_colors:string[] = ['black','blue','yellow','purple'];
-    player_nums:string[] = ['Player1', 'Player2','Player3','Player4'];
-    num_rows:number; num_cols:number;
+    zombies:Player[] = [];
+    player_colors:string[] = ['yellow','purple','black','red',];
+    player_nums:string[] = ['Player2','Player3','Player4','Player1'];
     num_players:number = 0;
 
-    constructor(num_rows:number, num_cols:number){
-        this.num_rows = num_rows;
-        this.num_cols = num_cols;
-        let row:number,col:number;
-        for (row = 0; row < num_rows; ++row){
-            let row_array:Tile[] = [];
-            for (col = 0; col < this.num_cols; ++col){
-                row_array.push(new Tile());
-            }
-            this.map.push(row_array);
-        }
+    constructor(){
     }
 
-    addPlayer(){
+    addPlayer(type:string='player'){
         if (this.num_players >= 4)
             return;
-        let x_coord:number = Math.floor(Math.random() * this.num_cols);
-        let y_coord:number = Math.floor(Math.random() * this.num_rows);
-        while (!this.map[x_coord][y_coord].empty){
-            x_coord = Math.floor(Math.random() * this.num_cols);
-            y_coord = Math.floor(Math.random() * this.num_rows);
-        }
-        let new_player = new Player(this.player_nums[0], 'right', this.player_colors[0], 'O>', [x_coord,y_coord]);
-        this.map[x_coord][y_coord].setTile(new_player);
+        let x_coord:number = Math.floor(Math.random() * 560);
+        let y_coord:number = Math.floor(Math.random() * 540);
+        x_coord -= x_coord%10;
+        y_coord -= y_coord%10;
+        // while (!this.map[x_coord][y_coord].empty){
+        //     x_coord = Math.floor(Math.random() * this.num_cols);
+        //     y_coord = Math.floor(Math.random() * this.num_rows);
+        // }
+        let new_player = new Player(type, 'right', this.player_colors.pop(), [x_coord,y_coord]);
+        this.map.push(new_player);
         this.players.push(new_player);
-        this.player_nums.splice(1,1);
-        this.player_colors.splice(1,1);
+        // this.player_nums.splice(1,1);
+        // this.player_colors.splice(1,1);
     }
 
     walk(direction:string, player:Player){
         if (this.checkDirection(direction, player.coords) == 'empty'){
-            if (direction != player.direction)
-                player.switchDirection(direction);
             this.moveItem(direction, player);
         }
       }
 
-    shoot(bullet:Bullet, player:Player, player2:Player, round?:number){
-        if (bullet.active())
-            bullet.incrementRange();
-        else{ 
-            this.map[bullet.coords[0]][bullet.coords[1]].emptyTile();
-            return;
-        }
+    shoot(bullet:Bullet){
+        console.log('shoot');
 
-        switch (this.checkDirection(bullet.direction, bullet.coords)){
-            case 'empty':
-                this.moveItem(bullet.direction, bullet);
-                this.map[player.coords[0]][player.coords[1]].setTile(player); 
-                setTimeout(() =>  this.shoot(bullet, player, player2), 300);
-                break;
-            case 'player':
-                this.map[bullet.coords[0]][bullet.coords[1]].emptyTile(); 
-                if (player2.hit(bullet.damage)){
-                    this.map[player2.coords[0]][player2.coords[1]].emptyTile();
-                this.players.splice(1,1);
-                }
-                break;
-            case 'bullet':
-                setTimeout(() => this.map[bullet.coords[0]][bullet.coords[1]].emptyTile(), 500);
-                break;
-            case 'undefined':
-                this.map[bullet.coords[0]][bullet.coords[1]].emptyTile();
-                break;
-          }   
+        // if (bullet.active())
+        //     bullet.incrementRange();
+        // else{ 
+        //     this.map[bullet.coords[0]][bullet.coords[1]].emptyTile();
+        //     return;
+        // }
+
+        // switch (this.checkDirection(bullet.direction, bullet.coords)){
+        //     case 'empty':
+        //         this.moveItem(bullet.direction, bullet);
+        //         this.map[player.coords[0]][player.coords[1]].setTile(player); 
+        //         setTimeout(() =>  this.shoot(bullet, player, player2), 300);
+        //         break;
+        //     // case 'player':
+        //     //     this.map[bullet.coords[0]][bullet.coords[1]].emptyTile(); 
+        //     //     if (player2.hit(bullet.damage)){
+        //     //         this.map[player2.coords[0]][player2.coords[1]].emptyTile();
+        //     //     this.players.splice(1,1);
+        //     //     }
+        //     //     break;
+        //     // case 'bullet':
+        //     //     setTimeout(() => this.map[bullet.coords[0]][bullet.coords[1]].emptyTile(), 500);
+        //     //     break;
+        //     case 'undefined':
+        //         console.log('undefined')
+        //         // this.map[bullet.coords[0]][bullet.coords[1]].emptyTile();
+        //         break;
+        //   }   
         }
 
     moveItem(direction:string, item:Item){
-        if (item.itemType == 'player'){
-            (<Player>item).switchDirection(direction);
-            console.log('item switch');
-        }
-        //   this.map[item.coords[0]][item.coords[1]].emptyTile();
-    
         switch (direction){
             case 'up':
-                item.y_coord -= 10;
-                console.log('+5: ' + item.y_coord);
-
-                if (item.y_coord < -25){
-                    console.log('next tile');
-                    this.map[item.coords[0]][item.coords[1]].emptyTile();
-                    this.map[item.coords[0]-1][item.coords[1]].setTile(item);
-                    item.coords[0] -= 1;
-                    item.y_coord = 16;
-                }
+                item.coords[1] -= 10;
                 break;
-          case 'down':
-            item.y_coord += 10;
-            console.log('+5: ' + item.y_coord);
-
-            if (item.y_coord > 25){
-                console.log('next tile');
-                this.map[item.coords[0]][item.coords[1]].emptyTile();
-                this.map[item.coords[0]+1][item.coords[1]].setTile(item);
-                item.coords[0] += 1;
-                item.y_coord = -16;
-            }
-              break;
-          case 'left':
-            item.x_coord -= 10;
-            console.log('-5: ' + item.x_coord);
-
-            if (item.x_coord < -25){
-              console.log('next tile');
-              this.map[item.coords[0]][item.coords[1]].emptyTile();
-              this.map[item.coords[0]][item.coords[1]-1].setTile(item);
-              item.coords[1] -= 1;
-              item.x_coord = 16;
-            }
-              break;
-          case 'right':
-              item.x_coord += 10;
-              console.log('+5: ' + item.x_coord);
-
-              if (item.x_coord > 25){
-                console.log('next tile');
-                this.map[item.coords[0]][item.coords[1]].emptyTile();
-                this.map[item.coords[0]][item.coords[1]+1].setTile(item);
-                item.coords[1] += 1;
-                item.x_coord = -16;
-              }
-
-              break;
+            case 'down':
+                item.coords[1] += 10;
+                break;
+            case 'left':
+                item.coords[0] -= 10;
+                break;
+            case 'right':
+                item.coords[0] += 10;
+                break;
         }
     }
 
     checkDirection(direction:string, curr_coords:number[]){
-        let new_coords;
+        // return 'empty';
+
+        let new_coords = curr_coords;
         switch (direction){
           case 'up':
-              new_coords = [curr_coords[0]-1, curr_coords[1]];
+              new_coords = [curr_coords[0], curr_coords[1]-10];
               break;
           case 'down':
-              new_coords = [curr_coords[0]+1, curr_coords[1]];
+              new_coords = [curr_coords[0], curr_coords[1]+10];
               break;
           case 'left':
-              new_coords = [curr_coords[0], curr_coords[1]-1];
+              new_coords = [curr_coords[0]-10, curr_coords[1]];
               break;
           case 'right':
-              new_coords = [curr_coords[0], curr_coords[1]+1];
+              new_coords = [curr_coords[0]+10, curr_coords[1]];
               break;
         }
-        if (new_coords[0] >= 0 && new_coords[0] < this.num_rows)
-          if (new_coords[1] >= 0 && new_coords[1] < this.num_cols)
-            switch (this.map[new_coords[0]][new_coords[1]].itemType){
-                case '':
-                    // console.log('.');
-                    return 'empty';
-                case 'player':
-                    console.log('O');
-                    return 'player';
-                case 'bullet':
-                    console.log('<->');
-                    return 'bullet';
-                default:
-                    console.log('checkDir default: ' + this.map[new_coords[0]][new_coords[1]].itemType);
-                    return 'unknown';
-            }
+
+        if (new_coords[0] >= 0 && new_coords[0] <= 560)
+            if (new_coords[1] >= 0 && new_coords[1] <= 540)
+                return 'empty';
+            else console.log('failed y');
+        else console.log('failed x');
+            
+            // switch (this.map[new_coords[0]][new_coords[1]].itemType){
+            //     case '':
+            //         // console.log('.');
+            //         return 'empty';
+            //     case 'player':
+            //         console.log('O');
+            //         return 'player';
+            //     case 'bullet':
+            //         console.log('<->');
+            //         return 'bullet';
+            //     default:
+            //         console.log('checkDir default: ' + this.map[new_coords[0]][new_coords[1]].itemType);
+            //         return 'unknown';
+            // }
         return 'undefined';
       }
 }

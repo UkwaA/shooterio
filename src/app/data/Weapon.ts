@@ -20,8 +20,8 @@ export class Weapon extends Item{
         this.type = type;
     }
 
-    assault(direction:string, coords:number[]):Bullet{
-        return new Bullet(direction, coords, this.damage, this.range);
+    assault(coords:number[], slope:number):Bullet{
+        return new Bullet(coords, slope, this.damage, this.range);
     }
 
 }

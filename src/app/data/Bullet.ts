@@ -1,15 +1,15 @@
 import { Item } from './Item';
 
 export class Bullet extends Item{
-    direction:string;
+    slope:number;
     damage:number;
     range_left:number;
     
-    constructor(direction:string, coords:number[], damage:number, range:number){
+    constructor(coords:number[], slope:number, damage:number, range:number){
         super();
         this.itemType = 'bullet';
-        this.img = 'weapon/bullet_'+direction+'.png';
-        this.direction = direction;
+        this.img = 'weapon/bullet_right.png';
+        this.slope = slope;
         this.coords = coords;
         this.damage = damage;
         this.range_left = range;
@@ -23,8 +23,7 @@ export class Bullet extends Item{
         --this.range_left;
     }
 
-    setImage(){
-        if (this.direction == 'up' || this.direction == 'down')
-            this.img = '/\\'
+    get degrees(){
+        return 0;
     }
 }

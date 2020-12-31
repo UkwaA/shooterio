@@ -1,12 +1,13 @@
-<div id="topbar" style="text-align:center;">
+<!-- <div id="topbar" style="text-align:center;">
   Player 1 Health: <span *ngIf="players[0]">{{players[0].health}}</span>
   - Player 2 Health: <span *ngIf="players[1]">{{players[1].health}}</span>
-</div>
-<div class="gamebox" id="gamebox">
-  <div *ngFor="let x of board; let row = index">
-    <div *ngFor="let y of x; let col = index" class="tile">
-      <img [class]="y.itemType" id="{{row}}{{col}}" [src]="'assets/'+y.item.img" [style.left.px]="y.item.x_coord" [style.top.px]="y.item.y_coord">
-    </div>
+</div> -->
+<div class="gamebox" id="gamebox" (mousemove)="changeAngle($event)">
+  <div *ngFor="let item of board">
+      <img *ngIf="item.itemType != 'player'" class="item" [src]="'assets/'+item.img" [style.left.px]="item.coords[0]" [style.top.px]="item.coords[1]">
+      <img *ngIf="item.itemType == 'player'" class="item" [src]="'assets/'+item.img" [style.transform]="'rotate('+mousePos+'deg)'"  [style.left.px]="item.coords[0]" [style.top.px]="item.coords[1]">
+
+      <!-- transform: rotate(90deg); -->
   </div>
 </div>
 <router-outlet></router-outlet>
