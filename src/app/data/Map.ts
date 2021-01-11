@@ -21,10 +21,7 @@ export class Map{
         let y_coord:number = Math.floor(Math.random() * 540);
         x_coord -= x_coord%10;
         y_coord -= y_coord%10;
-        // while (!this.map[x_coord][y_coord].empty){
-        //     x_coord = Math.floor(Math.random() * this.num_cols);
-        //     y_coord = Math.floor(Math.random() * this.num_rows);
-        // }
+
         let new_player = new Player(type, 'right', this.player_colors.pop(), [x_coord,y_coord]);
         this.map.push(new_player);
         this.players.push(new_player);
@@ -39,10 +36,20 @@ export class Map{
       }
 
     shoot(bullet:Bullet){
-        console.log('shoot');
+        // console.log(bullet);
+        // console.log(bullet.img);
+        // console.log('shoot');
 
-        // if (bullet.active())
-        //     bullet.incrementRange();
+        if (bullet.active()){
+            bullet.incrementRange();
+            this.moveBullet(bullet);
+            setTimeout( () => this.shoot(bullet), 50);
+        }
+        else{
+            let index = this.map.indexOf(bullet);
+            this.map.splice(index, 1);
+            // this.map.
+        }
         // else{ 
         //     this.map[bullet.coords[0]][bullet.coords[1]].emptyTile();
         //     return;
@@ -74,10 +81,10 @@ export class Map{
     moveItem(direction:string, item:Item){
         switch (direction){
             case 'up':
-                item.coords[1] -= 10;
+                item.coords[1] += 10;
                 break;
             case 'down':
-                item.coords[1] += 10;
+                item.coords[1] -= 10;
                 break;
             case 'left':
                 item.coords[0] -= 10;
@@ -88,16 +95,24 @@ export class Map{
         }
     }
 
+    moveBullet(item:Bullet){
+        if (item.slope < 0)
+            item.coords[0] -= 10;
+        else
+            item.coords[0] += 10;
+        item.calculatePos();
+    }
+
     checkDirection(direction:string, curr_coords:number[]){
         // return 'empty';
 
         let new_coords = curr_coords;
         switch (direction){
           case 'up':
-              new_coords = [curr_coords[0], curr_coords[1]-10];
+              new_coords = [curr_coords[0], curr_coords[1]+10];
               break;
           case 'down':
-              new_coords = [curr_coords[0], curr_coords[1]+10];
+              new_coords = [curr_coords[0], curr_coords[1]-10];
               break;
           case 'left':
               new_coords = [curr_coords[0]-10, curr_coords[1]];

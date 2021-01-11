@@ -4,10 +4,8 @@
 </div> -->
 <div class="gamebox" id="gamebox" (mousemove)="changeAngle($event)">
   <div *ngFor="let item of board">
-      <img *ngIf="item.itemType != 'player'" class="item" [src]="'assets/'+item.img" [style.left.px]="item.coords[0]" [style.top.px]="item.coords[1]">
-      <img *ngIf="item.itemType == 'player'" class="item" [src]="'assets/'+item.img" [style.transform]="'rotate('+mousePos+'deg)'"  [style.left.px]="item.coords[0]" [style.top.px]="item.coords[1]">
-
-      <!-- transform: rotate(90deg); -->
+      <!-- <img *ngIf="item.itemType != 'player'" class="item" [src]="'assets/'+item.img" [style.left.px]="item.coords[0]" [style.bottom.px]="item.coords[1]"> -->
+      <img class="item" [src]="'assets/'+item.img" [style.transform]="'rotate('+item.rotation+'deg)'"  [style.left.px]="item.coords[0]" [style.bottom.px]="item.coords[1]">
   </div>
 </div>
 <router-outlet></router-outlet>

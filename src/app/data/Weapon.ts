@@ -10,7 +10,7 @@ export class Weapon extends Item{
     belongs_to:string;
 
     constructor(name:string = 'pistol', damage:number = 25, 
-        range:number = 4, speed:number = 1000, type:string = 'gun'){
+        range:number = 100, speed:number = 1000, type:string = 'gun'){
         super();
         this.name = name;
         this.itemType = 'weapon';
@@ -20,8 +20,8 @@ export class Weapon extends Item{
         this.type = type;
     }
 
-    assault(coords:number[], slope:number):Bullet{
-        return new Bullet(coords, slope, this.damage, this.range);
+    assault(rotation:number, coords:number[], slope:number):Bullet{
+        return new Bullet(rotation, [coords[0],coords[1]], slope, this.damage, this.range);
     }
 
 }

@@ -19,7 +19,7 @@ export class Player extends Item{
         this.direction = direction;
         this.coords = coords;
         if (type == 'player')
-            this.img = 'player/black.png'
+            this.img = 'player/black2.png'
         else if (type == 'zombie')
             this.img = 'enemy/zombie.png'
         this.color = color;
@@ -28,10 +28,6 @@ export class Player extends Item{
     hit(amount:number){
         this.health -= amount;
         return this.health <= 0;
-    }
-
-    fireWeapon(coords:number[], slope:number){
-        return this.weapon.assault(coords, slope);
     }
 
     setWeapon(weapon:Weapon){

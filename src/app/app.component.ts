@@ -15,33 +15,44 @@ export class AppComponent implements OnInit {
   gamebox: HTMLElement;
   map:Map;
   board = [];
-  players:Player[] = [];
   player_direction:string
   
   num_rows:number = 5;
   num_cols:number = 5;
 
   mousePos:number = 0;
+  mouseX:number = 0;
+  mouseY:number = 0;
   trackMouse:boolean = false;
   player1:Player;
+  player1Rotation:number = 0;
 
   ngOnInit(){
     this.gamebox = document.getElementById('gamebox');
     this.map = new Map();
     this.map.addPlayer();
+    this.player1 = this.map.players[0];
+    // this.player1Rotation  = this.player1.rotation;
     // this.map.addPlayer('zombie');
-    this.players = this.map.players;
-    this.players[0].setWeapon(new Weapon());
-    this.player1 = this.players[0];
+    this.player1.setWeapon(new Weapon());
+    
     this.board = this.map.map;
     console.log(this.board);
 
     this.gamebox.onclick = (e) => {
-      this.map.shoot(this.player1.weapon.assault(this.player1.coords, 0));
+      console.log(this.mouseY + ',' + this.mouseX);
+      console.log(this.player1.coords);
+      console.log(this.player1.rotation);
+      let new_bullet = this.player1.weapon.assault(Number(this.player1.rotation), this.player1.coords, Math.tan(this.player1.rotation) );
+      // new_bullet.rotation = Number(this.player1Rotation);
+      console.log(new_bullet);
+      new_bullet.index = this.board.length;
+      this.board.push(new_bullet);
+      this.map.shoot(new_bullet);
     }
 
     document.onkeydown = (e) => {
-      let player1 = this.players[0];
+      let player1 = this.player1;
       switch(e.key){
           case "w":
             if (player1)
@@ -73,12 +84,15 @@ export class AppComponent implements OnInit {
 
   changeAngle(e){
     let box = e.target.getBoundingClientRect();
-    let mouseX = e.clientX - box.left;
-    let mouseY = e.clientY - box.top;
-    let yCoord = this.player1.coords[1] + 40;
+    this.mouseX = e.clientX - box.left;
+    // console.log(this.mouseX);
+    this.mouseY = box.bottom - e.clientY;
+    // console.log(this.mouseY);
+    let yCoord = this.player1.coords[1] + 30;
     let xCoord = this.player1.coords[0] + 40;
+    // console.log(this.player1.coords[1])
     
 
-    this.mousePos = Math.atan2(mouseY-yCoord, mouseX-xCoord) * 180 / Math.PI;
+    this.player1.rotation = -Math.atan2(this.mouseY-yCoord, this.mouseX-xCoord) * 180 / Math.PI;
   }
 }
